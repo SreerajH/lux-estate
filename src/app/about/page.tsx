@@ -10,21 +10,21 @@ const TEAM = [
     title: 'Senior Estate Director',
     specialty: 'Manhattan Penthouses',
     phone: '+1 (212) 555-0191',
-    photo: '/project/Victoria Ashworth.png',
+    photo: '/project/victoria-ashworth.jpg',
   },
   {
     name: 'Sebastian Harlow',
     title: 'Luxury Portfolio Advisor',
     specialty: 'Coastal Villas & Estates',
     phone: '+1 (310) 555-0147',
-    photo: '/project/Sebastian Harlow.png',
+    photo: '/project/sebastian-harlow.jpg',
   },
   {
     name: 'Camille Laurent',
     title: 'International Property Specialist',
     specialty: 'Alpine & Mountain Retreats',
     phone: '+1 (415) 555-0183',
-    photo: '/project/Camille Laurent.png',
+    photo: '/project/camille-laurent.png',
   },
 ]
 
