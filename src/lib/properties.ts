@@ -43,14 +43,14 @@ export interface Property {
   isFeatured: boolean
 }
 
-const AGENTS: Agent[] = [
+export const AGENTS: Agent[] = [
   {
     id: 'a1',
     name: 'Victoria Ashworth',
     title: 'Senior Estate Director',
     phone: '+1 (212) 555-0191',
-    email: 'v.ashworth@luxeestate.com',
-    photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80',
+    email: 'v.ashworth@velmont.com',
+    photo: '/project/victoria-ashworth.jpg',
     specialty: 'Manhattan Penthouses',
   },
   {
@@ -58,8 +58,8 @@ const AGENTS: Agent[] = [
     name: 'Sebastian Harlow',
     title: 'Luxury Portfolio Advisor',
     phone: '+1 (310) 555-0147',
-    email: 's.harlow@luxeestate.com',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80',
+    email: 's.harlow@velmont.com',
+    photo: '/project/sebastian-harlow.jpg',
     specialty: 'Coastal Villas & Estates',
   },
   {
@@ -67,8 +67,8 @@ const AGENTS: Agent[] = [
     name: 'Camille Laurent',
     title: 'International Property Specialist',
     phone: '+1 (415) 555-0183',
-    email: 'c.laurent@luxeestate.com',
-    photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&auto=format&fit=crop&q=80',
+    email: 'c.laurent@velmont.com',
+    photo: '/project/camille-laurent.png',
     specialty: 'Alpine & Mountain Retreats',
   },
 ]
@@ -86,10 +86,10 @@ export const PROPERTIES: Property[] = [
     status: 'for-sale',
     specs: { beds: 5, baths: 6, sqft: 6800, yearBuilt: 2022, garage: 2, pool: true, oceanView: false },
     images: [
-      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1280&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1613545325278-f24b0cae1224?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1600&auto=format&fit=crop&q=80',
     ],
     videoTourUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     description: 'Perched atop one of Tribeca\'s most coveted addresses, The Meridian Penthouse is a masterwork of contemporary design. Six-bedroom, seven-bathroom residence spanning the entire top floor with 360-degree skyline views. Designed by Pritzker laureate architect, featuring hand-selected Italian marble, custom millwork, and a private rooftop terrace with heated pool.',
@@ -111,10 +111,10 @@ export const PROPERTIES: Property[] = [
     status: 'for-sale',
     specs: { beds: 7, baths: 9, sqft: 11200, yearBuilt: 2020, garage: 4, pool: true, oceanView: true },
     images: [
-      'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1280&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1600&auto=format&fit=crop&q=80',
     ],
     description: 'Set directly on Carbon Beach — Malibu\'s Billionaire\'s Row — Villa Solaris is the definitive expression of California luxury living. Seven bedrooms, nine bathrooms, over 11,000 square feet of indoor-outdoor living space with direct beach access and sweeping Pacific views from every room.',
     features: ['Direct beach access', 'Oceanfront infinity pool', 'Guest house', 'Professional gym', 'Outdoor kitchen & bar', 'Movie screening room', 'Smart home automation', 'Climate-controlled wine room'],
@@ -135,10 +135,10 @@ export const PROPERTIES: Property[] = [
     status: 'for-sale',
     specs: { beds: 8, baths: 10, sqft: 14500, yearBuilt: 1928, garage: 6, pool: true, oceanView: false },
     images: [
-      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1280&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1416331108676-a22ccb276e35?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600&auto=format&fit=crop&q=80',
     ],
     description: 'Originally constructed in 1928 by noted architect Stanford White, Château Blanc has been meticulously restored to its original grandeur while incorporating every modern amenity. Set on 4.2 acres of manicured grounds on the prestigious Gin Lane.',
     features: ['Historic landmark designation', 'Formal gardens', 'Tennis court', 'Carriage house', 'Original hardwood floors', 'Formal dining room', 'Library with fireplace', 'Staff quarters'],
@@ -159,10 +159,10 @@ export const PROPERTIES: Property[] = [
     status: 'for-sale',
     specs: { beds: 6, baths: 8, sqft: 9800, yearBuilt: 2019, garage: 3, pool: false, oceanView: false },
     images: [
-      'https://images.unsplash.com/photo-1565183928294-7063f23ce0f8?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1280&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=1600&auto=format&fit=crop&q=80',
     ],
     description: 'Perched on Red Mountain with direct ski access and 270-degree views of the Elk Mountains, this contemporary masterpiece redefines mountain living. Designed by renowned architect David Adjaye, every room frames a breathtaking mountain panorama.',
     features: ['Ski-in/ski-out access', 'Indoor/outdoor heated pool', 'Mountain panorama views', 'Bespoke chef\'s kitchen', 'Home spa & sauna', 'Snowmelt driveway', 'Smart climate control', 'Helipad'],
@@ -183,10 +183,10 @@ export const PROPERTIES: Property[] = [
     status: 'for-sale',
     specs: { beds: 6, baths: 7, sqft: 8900, yearBuilt: 2021, garage: 4, pool: true, oceanView: true },
     images: [
-      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=1280&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1599809275671-b5942cabc7a2?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=1600&auto=format&fit=crop&q=80',
     ],
     description: 'An extraordinary waterfront estate on exclusive Palm Island, Ocean Manor offers 120 feet of direct Biscayne Bay frontage. The contemporary residence was designed by the award-winning firm Arquitectonica with interiors by Kelly Wearstler.',
     features: ['120ft water frontage', 'Private deep-water dock', 'Resort-style pool', 'Outdoor entertainment pavilion', 'Smart home technology', 'Impact-resistant windows', 'Generator', 'Elevator'],
@@ -207,10 +207,10 @@ export const PROPERTIES: Property[] = [
     status: 'for-sale',
     specs: { beds: 4, baths: 4, sqft: 5200, yearBuilt: 2018, garage: 2, pool: false, oceanView: false },
     images: [
-      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1280&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1280&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1600&auto=format&fit=crop&q=80',
     ],
     description: 'Commanding panoramic views of the Golden Gate Bridge, Alcatraz, and the Bay, The Observatory is Pacific Heights\' most coveted penthouse. Four bedrooms, four bathrooms across a single floor with a wrap-around terrace and private rooftop observatory dome.',
     features: ['Panoramic bay views', 'Private rooftop observatory', 'Chef\'s kitchen', 'Wine cellar', 'Smart home automation', 'Heated floors', 'Private parking', 'Concierge services'],
@@ -232,3 +232,55 @@ export function getFeaturedProperties(): Property[] {
 export function getRelatedProperties(currentId: string, type: string): Property[] {
   return PROPERTIES.filter((p) => p.id !== currentId && p.type === type).slice(0, 3)
 }
+
+export interface Collection {
+  id: string
+  name: string
+  count: number
+  description: string
+  image: string
+  region: string
+}
+
+export const COLLECTIONS: Collection[] = [
+  {
+    id: 'oceanfront-villas',
+    name: 'Oceanfront Villas',
+    count: 24,
+    region: 'Malibu · Miami · Amalfi',
+    description: 'Where the land gives way to water. Residences with the tide at the threshold and nothing but horizon beyond the terrace.',
+    image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1600&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'manhattan-penthouses',
+    name: 'Sky Penthouses',
+    count: 18,
+    region: 'Tribeca · Pacific Heights',
+    description: 'Full-floor residences above the city, where the skyline becomes the art collection and the elevator opens into the home.',
+    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1600&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'alpine-retreats',
+    name: 'Alpine Retreats',
+    count: 12,
+    region: 'Aspen · Gstaad · Courchevel',
+    description: 'Ski-in sanctuaries of stone, timber and silence — warm rooms framed by cold, enormous views.',
+    image: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1600&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'historic-estates',
+    name: 'Historic Estates',
+    count: 9,
+    region: 'The Hamptons · Cotswolds',
+    description: 'Homes of rare architectural pedigree, restored with patience and quietly brought into the present century.',
+    image: 'https://images.unsplash.com/photo-1416331108676-a22ccb276e35?w=1600&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'modern-masterpieces',
+    name: 'Modern Masterpieces',
+    count: 31,
+    region: 'Los Angeles · Ibiza · Lisbon',
+    description: 'Residences by the most acclaimed architects of our time — each a singular argument for how to live.',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&auto=format&fit=crop&q=80',
+  },
+]

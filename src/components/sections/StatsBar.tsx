@@ -1,59 +1,95 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { BRAND } from '@/lib/brand'
 
 const STATS = [
-  { value: 250, suffix: '+', label: 'Properties Sold' },
-  { value: 2.8, prefix: '$', suffix: 'B', label: 'Total Value' },
-  { value: 18, suffix: '', label: 'Years Experience' },
-  { value: 100, suffix: '%', label: 'Discretion Guaranteed' },
+  { value: 2.8, prefix: '$', suffix: 'B', label: 'In residences placed' },
+  { value: 250, suffix: '+', label: 'Homes represented' },
+  { value: 18, suffix: '', label: 'Years in private practice' },
+  { value: 1, prefix: '<', suffix: '%', label: 'Of homes we are shown are accepted' },
 ]
+
+const STATEMENT =
+  'We are not a marketplace. We are a small private office that represents a short list of extraordinary homes — and the people who will live in them next.'
 
 function Counter({ target, prefix = '', suffix = '' }: { target: number; prefix?: string; suffix?: string }) {
   const [count, setCount] = useState(0)
   const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true })
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const decimals = target % 1 !== 0 ? 1 : 0
 
   useEffect(() => {
     if (!inView) return
-    const duration = 2000
-    const start = Date.now()
-    const animate = () => {
-      const elapsed = Date.now() - start
-      const progress = Math.min(elapsed / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      setCount(parseFloat((target * eased).toFixed(target % 1 !== 0 ? 1 : 0)))
-      if (progress < 1) requestAnimationFrame(animate)
+    const duration = 2200
+    const start = performance.now()
+    let raf = 0
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / duration, 1)
+      setCount(target * (1 - Math.pow(1 - p, 4)))
+      if (p < 1) raf = requestAnimationFrame(tick)
     }
-    requestAnimationFrame(animate)
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
   }, [inView, target])
 
   return (
-    <span ref={ref}>
-      {prefix}{target % 1 !== 0 ? count.toFixed(1) : Math.round(count)}{suffix}
+    <span ref={ref} className="tabular-nums">
+      {prefix}
+      {count.toFixed(decimals)}
+      {suffix}
     </span>
   )
 }
 
-export default function StatsBar() {
+function Word({ word, progress, range }: { word: string; progress: MotionValue<number>; range: [number, number] }) {
+  const opacity = useTransform(progress, range, [0.16, 1])
+  const italic = word === 'extraordinary' || word === 'next.'
   return (
-    <section className="bg-obsidian py-16">
-      <div className="max-w-[1440px] mx-auto px-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 md:divide-x md:divide-white/10">
+    <motion.span style={{ opacity }} className={italic ? 'italic text-bronze' : undefined}>
+      {word}{' '}
+    </motion.span>
+  )
+}
+
+export default function StatsBar() {
+  const ref = useRef<HTMLParagraphElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 45%'] })
+  const words = STATEMENT.split(' ')
+
+  return (
+    <section className="bg-bone text-noir py-28 md:py-40">
+      <div className="max-w-[1600px] mx-auto px-5 md:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10 lg:gap-16">
+          <p className="eyebrow text-bronze pt-3">The House of {BRAND.name}</p>
+          <p
+            ref={ref}
+            className="font-display text-[clamp(28px,3.6vw,56px)] leading-[1.18] tracking-[-0.015em] max-w-[22ch] lg:max-w-none"
+          >
+            {words.map((w, i) => (
+              <Word key={i} word={w} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]} />
+            ))}
+          </p>
+        </div>
+
+        <div className="mt-24 md:mt-32 grid grid-cols-2 lg:grid-cols-4 gap-px bg-sand border-y border-sand">
           {STATS.map((stat, i) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-center md:px-8"
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 1, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-bone pt-9 pb-9 pr-5 pl-5 md:pl-8 [&:nth-child(odd)]:pl-0 lg:[&:nth-child(odd)]:pl-8 lg:first:!pl-0"
             >
-              <div className="font-display font-medium text-gold" style={{ fontSize: 'clamp(36px, 4vw, 48px)' }}>
+              <div
+                className="font-display text-[clamp(44px,5vw,76px)] leading-none text-noir"
+                style={{ fontVariationSettings: '"opsz" 36' }}
+              >
                 <Counter target={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
               </div>
-              <p className="text-ivory/50 text-xs tracking-[0.1em] uppercase font-body mt-2">
+              <p className="mt-4 text-[12px] tracking-[0.14em] uppercase text-taupe max-w-[18ch] leading-relaxed">
                 {stat.label}
               </p>
             </motion.div>

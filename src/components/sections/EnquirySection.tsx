@@ -1,95 +1,120 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
+import { useState } from 'react'
+import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
+import { AGENTS } from '@/lib/properties'
 
 export default function EnquirySection() {
+  const [sent, setSent] = useState(false)
+
   return (
-    <section className="bg-graphite py-[120px]">
-      <div className="max-w-[1440px] mx-auto px-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+    <section className="relative bg-loden text-bone py-28 md:py-40 overflow-hidden">
+      <div
+        aria-hidden
+        className="absolute -right-[10vw] -top-[20vw] w-[60vw] h-[60vw] rounded-full opacity-[0.07]"
+        style={{ background: 'radial-gradient(circle, var(--color-bronze-soft), transparent 65%)' }}
+      />
+      <div className="relative max-w-[1600px] mx-auto px-5 md:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-28">
           <motion.div
-            initial={{ opacity: 0, x: -32 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="text-gold text-[11px] tracking-[0.3em] uppercase font-body font-medium mb-4">Private Service</p>
-            <h2 className="font-display text-ivory font-light leading-tight mb-6" style={{ fontSize: 'clamp(36px, 4vw, 56px)' }}>
-              Your Search Begins With a Conversation
+            <p className="eyebrow text-bronze-soft mb-6">Private Service</p>
+            <h2 className="font-display text-[clamp(38px,4.6vw,72px)] leading-[1.02] tracking-[-0.02em] mb-8">
+              Every search begins with a <em className="text-bronze-soft">conversation</em>.
             </h2>
-            <p className="text-ivory/50 font-body text-base leading-relaxed mb-8 max-w-lg">
-              Every great acquisition starts with understanding exactly what you desire. Our advisors offer an entirely discreet, white-glove service tailored to your vision.
+            <p className="text-bone/60 text-[16px] leading-relaxed max-w-md mb-14">
+              Share as much or as little as you like. A senior advisor — never an assistant — will reply personally, in confidence.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-px h-8 bg-gold/40" />
-                <div>
-                  <p className="text-ivory/30 text-[10px] tracking-[0.1em] uppercase font-body">Response time</p>
-                  <p className="text-ivory text-sm font-body">Within 2 hours</p>
+
+            <div className="flex items-end gap-4">
+              {AGENTS.map((a, i) => (
+                <div key={a.id} className={i === 1 ? 'w-24 md:w-28' : 'w-20 md:w-24'}>
+                  <div className="relative aspect-[3/4] arch bg-loden-deep">
+                    <Image src={a.photo} alt={a.name} fill sizes="120px" className="object-cover" />
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-px h-8 bg-gold/40" />
-                <div>
-                  <p className="text-ivory/30 text-[10px] tracking-[0.1em] uppercase font-body">Availability</p>
-                  <p className="text-ivory text-sm font-body">24/7 Global</p>
-                </div>
+              ))}
+              <div className="pl-4 pb-1">
+                <p className="text-[11px] tracking-[0.24em] uppercase text-bone/40">Replies within</p>
+                <p className="font-display text-[28px] leading-tight">two hours</p>
               </div>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 32 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-obsidian p-8 md:p-10 pulse-gold-border"
-            style={{ borderRadius: '4px' }}
+            transition={{ duration: 1.1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:pt-4"
           >
-            <h3 className="font-display text-ivory text-2xl font-light mb-6">Begin Your Search</h3>
-            <div className="space-y-4">
-              {[
-                { label: 'Full Name', type: 'text', placeholder: 'Your name' },
-                { label: 'Email Address', type: 'email', placeholder: 'your@email.com' },
-                { label: 'Phone', type: 'tel', placeholder: '+1 (000) 000-0000' },
-              ].map((field) => (
-                <div key={field.label}>
-                  <label className="block text-ivory/40 text-[11px] tracking-[0.1em] uppercase font-body mb-2">
-                    {field.label}
+            <AnimatePresence mode="wait">
+              {sent ? (
+                <motion.div
+                  key="sent"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="h-full flex flex-col justify-center py-16"
+                >
+                  <p className="eyebrow text-bronze-soft mb-6">Received</p>
+                  <p className="font-display text-[40px] leading-tight mb-4">Thank you.</p>
+                  <p className="text-bone/60 max-w-sm leading-relaxed">
+                    An advisor will be in touch shortly. Everything you have shared stays between us.
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  exit={{ opacity: 0 }}
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    setSent(true)
+                  }}
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-8"
+                >
+                  {[
+                    { label: 'Name', type: 'text', placeholder: 'Full name', auto: 'name' },
+                    { label: 'Email', type: 'email', placeholder: 'you@domain.com', auto: 'email' },
+                    { label: 'Telephone', type: 'tel', placeholder: 'Optional', auto: 'tel' },
+                    { label: 'Interest', type: 'text', placeholder: 'e.g. Oceanfront, Malibu', auto: 'off' },
+                  ].map((f) => (
+                    <label key={f.label} className="block">
+                      <span className="text-[10px] tracking-[0.28em] uppercase text-bone/45">{f.label}</span>
+                      <input
+                        suppressHydrationWarning
+                        type={f.type}
+                        autoComplete={f.auto}
+                        placeholder={f.placeholder}
+                        required={f.label === 'Name' || f.label === 'Email'}
+                        className="field text-bone"
+                      />
+                    </label>
+                  ))}
+                  <label className="block sm:col-span-2">
+                    <span className="text-[10px] tracking-[0.28em] uppercase text-bone/45">What are you looking for?</span>
+                    <textarea
+                      suppressHydrationWarning
+                      rows={3}
+                      placeholder="Location, timing, the feeling of the place…"
+                      className="field text-bone resize-none"
+                    />
                   </label>
-                  <input
-                    suppressHydrationWarning
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    className="w-full bg-graphite border border-white/10 text-ivory text-sm font-body px-4 py-3 focus:outline-none focus:border-gold/50 placeholder-ivory/20 transition-colors"
-                    style={{ borderRadius: '2px' }}
-                  />
-                </div>
-              ))}
-              <div>
-                <label className="block text-ivory/40 text-[11px] tracking-[0.1em] uppercase font-body mb-2">
-                  Message
-                </label>
-                <textarea
-                  suppressHydrationWarning
-                  rows={3}
-                  placeholder="Tell us about your ideal property..."
-                  className="w-full bg-graphite border border-white/10 text-ivory text-sm font-body px-4 py-3 focus:outline-none focus:border-gold/50 placeholder-ivory/20 transition-colors resize-none"
-                  style={{ borderRadius: '2px' }}
-                />
-              </div>
-              <Link
-                href="/contact"
-                className="block w-full py-4 bg-gold text-obsidian text-center text-[13px] tracking-[0.1em] uppercase font-body font-medium hover:bg-gold-light transition-colors duration-300 mt-2"
-                style={{ borderRadius: '2px' }}
-              >
-                Send Enquiry →
-              </Link>
-            </div>
-            <p className="text-ivory/20 text-[10px] font-body tracking-wide mt-4 text-center">
-              Strictly confidential. Your information is never shared.
-            </p>
+                  <div className="sm:col-span-2 flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-4">
+                    <p className="text-[12px] text-bone/40 max-w-[28ch] leading-relaxed">
+                      Strictly confidential. Never shared, never added to a list.
+                    </p>
+                    <button type="submit" className="btn btn-light">
+                      Send enquiry <span aria-hidden>→</span>
+                    </button>
+                  </div>
+                </motion.form>
+              )}
+            </AnimatePresence>
           </motion.div>
         </div>
       </div>

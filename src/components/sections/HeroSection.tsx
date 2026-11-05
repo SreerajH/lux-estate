@@ -1,117 +1,195 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
+import { BRAND } from '@/lib/brand'
 
-const WORDS = ['Extraordinary', 'Iconic', 'Rare', 'Timeless', 'Unmatched']
+const SLIDES = [
+  {
+    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=2400&auto=format&fit=crop&q=80',
+    title: 'Villa Solaris',
+    place: 'Carbon Beach, Malibu',
+    price: '$28,500,000',
+    slug: 'villa-solaris-malibu',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=2400&auto=format&fit=crop&q=80',
+    title: 'The Alpine Retreat',
+    place: 'Red Mountain, Aspen',
+    price: '$32,000,000',
+    slug: 'alpine-retreat-aspen',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=2400&auto=format&fit=crop&q=80',
+    title: 'Ocean Manor',
+    place: 'Palm Island, Miami Beach',
+    price: '$22,750,000',
+    slug: 'ocean-manor-miami',
+  },
+]
+
+const DURATION = 7000
+const ease = [0.16, 1, 0.3, 1] as const
 
 export default function HeroSection() {
-  const [wordIndex, setWordIndex] = useState(0)
+  const [index, setIndex] = useState(0)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setWordIndex((i) => (i + 1) % WORDS.length)
-    }, 3000)
-    return () => clearInterval(interval)
-  }, [])
+    const t = setTimeout(() => setIndex((i) => (i + 1) % SLIDES.length), DURATION)
+    return () => clearTimeout(t)
+  }, [index])
+
+  const slide = SLIDES[index]
+  const letters = BRAND.name.toUpperCase().split('')
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-obsidian">
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&auto=format&fit=crop&q=80"
-          alt="Luxury estate exterior"
-          fill
-          priority
-          className="object-cover"
-          style={{ opacity: 0.4 }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-obsidian/60 via-obsidian/30 to-obsidian/80" />
-      </div>
-
-      <div className="relative z-10 max-w-[1440px] mx-auto px-10 text-center">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-gold text-[12px] tracking-[0.3em] uppercase font-body font-medium mb-8"
+    <section className="relative h-[100svh] min-h-[700px] overflow-hidden bg-noir text-bone grain">
+      {/* photography */}
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={slide.image}
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.6, ease: 'easeInOut' }}
         >
-          The World&apos;s Most Exclusive Properties
-        </motion.p>
+          <div className="absolute inset-0" style={{ animation: `kenburns ${DURATION + 1600}ms cubic-bezier(0.25,0.1,0.25,1) both` }}>
+            <Image src={slide.image} alt={`${slide.title}, ${slide.place}`} fill priority sizes="100vw" className="object-cover" />
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="font-display font-light text-ivory leading-[1.05] mb-6"
-          style={{ fontSize: 'clamp(56px, 8vw, 96px)' }}
-        >
-          Discover something
-          <br />
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={wordIndex}
-              initial={{ opacity: 0, y: 20 }}
+      {/* tonal grade */}
+      <div className="absolute inset-0 bg-gradient-to-b from-noir/70 via-noir/10 to-noir/90" />
+      <div className="absolute inset-0 bg-gradient-to-r from-noir/50 via-transparent to-transparent" />
+
+      <div className="relative z-10 h-full max-w-[1600px] mx-auto px-5 md:px-12 flex flex-col justify-end pb-[3vw]">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-6 md:mb-10">
+          {/* statement */}
+          <div className="max-w-xl">
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-              className="text-gold font-normal"
+              transition={{ duration: 1, delay: 0.9, ease }}
+              className="eyebrow text-bronze-soft mb-6 flex items-center gap-4"
             >
-              {WORDS[wordIndex]}
-            </motion.span>
-          </AnimatePresence>
-        </motion.h1>
+              <span className="h-px w-10 bg-bronze-soft/70" />
+              Est. {BRAND.established} · Worldwide
+            </motion.p>
+            <h1 className="font-display text-[clamp(40px,5.4vw,82px)] leading-[1.02] tracking-[-0.02em]">
+              {['Homes of', 'quiet consequence.'].map((line, i) => (
+                <span key={line} className="block overflow-hidden pb-[0.08em]">
+                  <motion.span
+                    className="block"
+                    initial={{ y: '105%' }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 1.3, delay: 1 + i * 0.12, ease }}
+                  >
+                    {i === 1 ? (
+                      <>
+                        <em className="text-bronze-soft">quiet</em> consequence.
+                      </>
+                    ) : (
+                      line
+                    )}
+                  </motion.span>
+                </span>
+              ))}
+            </h1>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 1.4, ease }}
+              className="mt-9 flex flex-wrap gap-3"
+            >
+              <Link href="/properties" className="btn btn-light">
+                View residences
+              </Link>
+              <Link href="/contact" className="btn btn-ghost">
+                Arrange a private viewing
+              </Link>
+            </motion.div>
+          </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="text-mist/70 font-body text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed"
-        >
-          A curated portfolio of the world&apos;s most extraordinary estates, penthouses,
-          and villas — available only through private introduction.
-        </motion.p>
+          {/* slide caption */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1.6 }}
+            className="w-full lg:w-[340px] shrink-0"
+          >
+            <div className="flex items-center justify-between text-[11px] tracking-[0.28em] uppercase text-bone/60 mb-4">
+              <span>Now showing</span>
+              <span className="font-body tabular-nums">
+                0{index + 1} <span className="text-bone/30">/ 0{SLIDES.length}</span>
+              </span>
+            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={slide.slug}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.7, ease }}
+              >
+                <Link href={`/properties/${slide.slug}`} className="group block">
+                  <p className="font-display text-[28px] leading-tight group-hover:text-bronze-soft transition-colors duration-500">
+                    {slide.title}
+                  </p>
+                  <p className="mt-1 text-[13px] tracking-[0.08em] text-bone/60">
+                    {slide.place} — {slide.price}
+                  </p>
+                </Link>
+              </motion.div>
+            </AnimatePresence>
+            <div className="mt-5 flex gap-2">
+              {SLIDES.map((s, i) => (
+                <button
+                  key={s.slug}
+                  onClick={() => setIndex(i)}
+                  className="relative flex-1 h-6 group"
+                  aria-label={`Show ${s.title}`}
+                >
+                  <span className="absolute inset-x-0 top-1/2 h-px bg-bone/20" />
+                  {i === index && (
+                    <motion.span
+                      key={`bar-${index}`}
+                      className="absolute left-0 top-1/2 h-px bg-bone origin-left w-full"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: DURATION / 1000, ease: 'linear' }}
+                    />
+                  )}
+                  {i < index && <span className="absolute inset-x-0 top-1/2 h-px bg-bone/60" />}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
+        {/* monumental wordmark */}
+        <div
+          aria-hidden
+          className="flex justify-between font-display uppercase leading-[0.74] select-none -mx-[0.5vw]"
+          style={{ fontSize: 'clamp(64px, 19.5vw, 340px)', fontVariationSettings: '"opsz" 96' }}
         >
-          <Link
-            href="/properties"
-            className="px-10 py-4 bg-gold text-obsidian text-[13px] tracking-[0.1em] uppercase font-body font-medium transition-all duration-300 hover:bg-gold-light"
-            style={{ borderRadius: '2px' }}
-          >
-            Browse Properties
-          </Link>
-          <Link
-            href="/contact"
-            className="px-10 py-4 border border-ivory/40 text-ivory text-[13px] tracking-[0.1em] uppercase font-body font-medium transition-all duration-300 hover:border-ivory hover:bg-ivory/5 animate-pulse-gold-border"
-            style={{ borderRadius: '2px' }}
-          >
-            Book a Private Tour
-          </Link>
-        </motion.div>
+          {letters.map((ch, i) => (
+            <span key={i} className="block overflow-hidden pt-[0.04em]">
+              <motion.span
+                className="block text-bone/95"
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1.5, delay: 0.15 + i * 0.07, ease }}
+              >
+                {ch}
+              </motion.span>
+            </span>
+          ))}
+        </div>
       </div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.5 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
-      >
-        <span className="text-ivory/40 text-[10px] tracking-[0.2em] uppercase font-body">Scroll</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <ChevronDown size={20} className="text-gold" />
-        </motion.div>
-      </motion.div>
     </section>
   )
 }

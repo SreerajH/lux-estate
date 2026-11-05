@@ -2,11 +2,11 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, Bed, Bath, Square, Calendar, Car, Droplets, Eye } from 'lucide-react'
 import PropertyGallery from '@/components/property/PropertyGallery'
 import PropertyCard from '@/components/property/PropertyCard'
 import { getPropertyBySlug, getRelatedProperties, PROPERTIES } from '@/lib/properties'
-import { formatNumber as fmtNum } from '@/lib/utils'
+import { formatNumber } from '@/lib/utils'
+import { BRAND } from '@/lib/brand'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const property = getPropertyBySlug(slug)
   if (!property) return {}
   return {
-    title: `${property.title} | Luxe Estate`,
+    title: `${property.title}, ${property.location.city} | ${BRAND.name}`,
     description: property.description.slice(0, 160),
   }
 }
@@ -32,163 +32,143 @@ export default async function PropertyDetailPage({ params }: Props) {
   if (!property) notFound()
 
   const related = getRelatedProperties(property.id, property.type)
+  const fallbackRelated = related.length ? related : PROPERTIES.filter((p) => p.id !== property.id).slice(0, 3)
 
   const specs = [
-    { icon: Bed, label: 'Bedrooms', value: String(property.specs.beds) },
-    { icon: Bath, label: 'Bathrooms', value: String(property.specs.baths) },
-    { icon: Square, label: 'Square Feet', value: fmtNum(property.specs.sqft) },
-    { icon: Calendar, label: 'Year Built', value: String(property.specs.yearBuilt) },
-    ...(property.specs.garage ? [{ icon: Car, label: 'Garage', value: `${property.specs.garage} Cars` }] : []),
-    ...(property.specs.pool ? [{ icon: Droplets, label: 'Pool', value: 'Yes' }] : []),
-    ...(property.specs.oceanView ? [{ icon: Eye, label: 'Ocean View', value: 'Yes' }] : []),
+    { label: 'Bedrooms', value: String(property.specs.beds) },
+    { label: 'Bathrooms', value: String(property.specs.baths) },
+    { label: 'Interior', value: `${formatNumber(property.specs.sqft)} sq ft` },
+    { label: 'Completed', value: String(property.specs.yearBuilt) },
+    ...(property.specs.garage ? [{ label: 'Garage', value: `${property.specs.garage} cars` }] : []),
   ]
 
+  const [lead, ...rest] = property.description.split('. ')
+
   return (
-    <div className="min-h-screen bg-ivory">
-      <div className="pt-20">
-        <PropertyGallery images={property.images} title={property.title} />
-
-        <div className="max-w-[1440px] mx-auto px-10 py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-16">
+    <div className="bg-bone">
+      {/* title band */}
+      <section className="bg-noir text-bone pt-36 md:pt-44 pb-12 md:pb-16">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-12">
+          <nav className="text-[11px] tracking-[0.24em] uppercase text-bone/40 mb-10">
+            <Link href="/properties" className="hover:text-bone transition-colors">Residences</Link>
+            <span className="mx-3">/</span>
+            <span className="text-bone/70">{property.location.city}</span>
+          </nav>
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <div>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {property.tags.map((tag) => (
-                  <span key={tag} className="bg-gold text-obsidian text-[10px] tracking-[0.1em] uppercase font-body font-medium px-3 py-1.5" style={{ borderRadius: '2px' }}>
-                    {tag}
-                  </span>
+              <p className="eyebrow text-bronze-soft mb-5">
+                {property.location.neighborhood} · {property.location.city}, {property.location.state}
+                {property.isExclusive && <span className="text-bone/50"> — Exclusive to {BRAND.name}</span>}
+              </p>
+              <h1 className="font-display text-[clamp(44px,7vw,112px)] leading-[0.96] tracking-[-0.025em]">{property.title}</h1>
+            </div>
+            <div className="lg:text-right">
+              <p className="text-[10px] tracking-[0.28em] uppercase text-bone/45 mb-2">{property.priceLabel}</p>
+              <p className="font-display text-[clamp(30px,3vw,46px)] leading-none" style={{ fontVariationSettings: '"opsz" 96' }}>
+                {property.priceDisplay}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <PropertyGallery images={property.images} title={property.title} />
+
+      {/* specs rule */}
+      <div className="border-b border-sand">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-12 grid grid-cols-2 md:grid-cols-5 gap-px bg-sand">
+          {specs.map((s) => (
+            <div key={s.label} className="bg-bone py-8 pr-4 md:px-8 md:first:pl-0">
+              <p className="text-[10px] tracking-[0.28em] uppercase text-taupe mb-2">{s.label}</p>
+              <p className="font-display text-[26px] text-noir leading-none">{s.value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-[1600px] mx-auto px-5 md:px-12 py-20 md:py-28">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-16 lg:gap-28">
+          <div>
+            <p className="eyebrow text-bronze mb-8">The Residence</p>
+            <p className="font-display text-[clamp(26px,2.6vw,40px)] leading-[1.25] text-noir mb-10 max-w-[30ch]">
+              {lead}.
+            </p>
+            {rest.length > 0 && (
+              <p className="text-stone text-[17px] leading-[1.8] max-w-2xl">
+                {rest.join('. ')}
+              </p>
+            )}
+
+            <div className="mt-20">
+              <p className="eyebrow text-bronze mb-8">Particulars</p>
+              <ol className="grid grid-cols-1 sm:grid-cols-2 border-t border-sand">
+                {property.features.map((feat, i) => (
+                  <li key={feat} className="flex items-baseline gap-5 py-5 border-b border-sand sm:odd:pr-8 sm:even:pl-8 sm:even:border-l">
+                    <span className="text-[11px] tracking-[0.2em] text-taupe tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="font-display text-[20px] text-noir">{feat}</span>
+                  </li>
                 ))}
-                {property.isExclusive && (
-                  <span className="border border-gold text-gold text-[10px] tracking-[0.1em] uppercase font-body font-medium px-3 py-1.5" style={{ borderRadius: '2px' }}>
-                    Exclusive
-                  </span>
-                )}
-              </div>
-
-              <h1 className="font-display text-obsidian font-light leading-tight mb-3" style={{ fontSize: 'clamp(32px, 4vw, 52px)' }}>
-                {property.title}
-              </h1>
-              <div className="flex items-center gap-1.5 text-slate mb-4">
-                <MapPin size={14} className="text-gold" />
-                <span className="font-body text-base">{property.location.neighborhood}, {property.location.city}, {property.location.state}</span>
-              </div>
-              <div className="mb-10">
-                <p className="text-slate/50 text-[11px] tracking-[0.1em] uppercase font-body mb-1">{property.priceLabel}</p>
-                <p className="font-display text-obsidian font-semibold" style={{ fontSize: 'clamp(28px, 3vw, 42px)' }}>
-                  {property.priceDisplay}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-6 bg-mist mb-10" style={{ borderRadius: '4px' }}>
-                {specs.map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="text-center">
-                    <Icon size={18} className="text-gold mx-auto mb-2" />
-                    <p className="text-obsidian font-body font-medium text-sm">{value}</p>
-                    <p className="text-slate/50 text-[10px] tracking-[0.08em] uppercase font-body">{label}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mb-10">
-                <h2 className="font-display text-obsidian text-2xl font-medium mb-4">About This Property</h2>
-                <p className="text-slate font-body leading-relaxed text-base">{property.description}</p>
-              </div>
-
-              <div className="mb-10">
-                <h2 className="font-display text-obsidian text-2xl font-medium mb-6">Key Features</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {property.features.map((feat) => (
-                    <div key={feat} className="flex items-center gap-3">
-                      <div className="w-1 h-1 rounded-full bg-gold flex-shrink-0" />
-                      <span className="text-slate font-body text-sm">{feat}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {property.videoTourUrl && (
-                <div className="mb-10">
-                  <h2 className="font-display text-obsidian text-2xl font-medium mb-6">Virtual Tour</h2>
-                  <div className="relative aspect-video bg-obsidian" style={{ borderRadius: '4px', overflow: 'hidden' }}>
-                    <iframe
-                      src={property.videoTourUrl}
-                      title={`${property.title} virtual tour`}
-                      className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </div>
-                </div>
-              )}
+              </ol>
             </div>
 
-            <div className="relative">
-              <div className="sticky top-28">
-                <div className="bg-obsidian p-8" style={{ borderRadius: '4px', boxShadow: 'var(--shadow-gold)' }}>
-                  <h3 className="font-display text-ivory text-xl font-light mb-6">Request Information</h3>
-                  <div className="space-y-4">
-                    {['Full Name', 'Email Address', 'Phone Number'].map((label) => (
-                      <div key={label}>
-                        <label className="block text-ivory/40 text-[10px] tracking-[0.1em] uppercase font-body mb-1.5">{label}</label>
-                        <input
-                          type="text"
-                          className="w-full bg-graphite border border-white/10 text-ivory text-sm font-body px-4 py-2.5 focus:outline-none focus:border-gold/50 placeholder-ivory/20"
-                          style={{ borderRadius: '2px' }}
-                          placeholder={label}
-                        />
-                      </div>
-                    ))}
-                    <div>
-                      <label className="block text-ivory/40 text-[10px] tracking-[0.1em] uppercase font-body mb-1.5">Message</label>
-                      <textarea
-                        rows={3}
-                        className="w-full bg-graphite border border-white/10 text-ivory text-sm font-body px-4 py-2.5 focus:outline-none focus:border-gold/50 placeholder-ivory/20 resize-none"
-                        style={{ borderRadius: '2px' }}
-                        placeholder="I am interested in this property..."
-                      />
-                    </div>
-                    <button
-                      className="w-full py-3.5 bg-gold text-obsidian text-[12px] tracking-[0.1em] uppercase font-body font-medium hover:bg-gold-light transition-colors"
-                      style={{ borderRadius: '2px' }}
-                    >
-                      Send Enquiry →
-                    </button>
-                  </div>
-
-                  <div className="mt-8 pt-6 border-t border-white/10">
-                    <p className="text-ivory/30 text-[10px] tracking-[0.08em] uppercase font-body mb-3">Your Agent</p>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 flex-shrink-0">
-                        <Image src={property.agent.photo} alt={property.agent.name} fill className="object-cover rounded-full" />
-                      </div>
-                      <div>
-                        <p className="text-ivory text-sm font-body font-medium">{property.agent.name}</p>
-                        <p className="text-ivory/40 text-[11px] font-body">{property.agent.specialty}</p>
-                      </div>
-                    </div>
-                    <a href={`tel:${property.agent.phone}`} className="block mt-3 text-gold text-sm font-body hover:text-gold-light transition-colors">
-                      {property.agent.phone}
-                    </a>
-                  </div>
-                </div>
-              </div>
+            <div className="mt-20 relative overflow-hidden bg-loden text-bone p-10 md:p-14">
+              <p className="eyebrow text-bronze-soft mb-5">Private viewing</p>
+              <p className="font-display text-[clamp(28px,2.8vw,40px)] leading-[1.15] max-w-[22ch] mb-8">
+                See {property.title} in person, or walk it with your advisor by live video.
+              </p>
+              <Link href="/contact" className="btn btn-light">Arrange a viewing</Link>
             </div>
           </div>
 
-          {related.length > 0 && (
-            <div className="mt-20">
-              <div className="flex items-center justify-between mb-10">
-                <h2 className="font-display text-obsidian text-3xl font-light">Similar Properties</h2>
-                <Link href="/properties" className="text-gold text-[12px] tracking-[0.1em] uppercase font-body border-b border-gold/40 hover:border-gold pb-1 transition-colors">
-                  View All →
-                </Link>
+          <aside>
+            <div className="lg:sticky lg:top-28 bg-noir text-bone p-8 md:p-10">
+              <p className="eyebrow text-bronze-soft mb-8">Your Advisor</p>
+              <div className="flex items-end gap-5 mb-8">
+                <div className="relative w-24 aspect-[3/4] arch shrink-0 bg-char">
+                  <Image src={property.agent.photo} alt={property.agent.name} fill sizes="100px" className="object-cover" />
+                </div>
+                <div>
+                  <p className="font-display text-[24px] leading-tight">{property.agent.name}</p>
+                  <p className="text-[12px] text-bone/50 mt-1">{property.agent.title}</p>
+                </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {related.map((p) => <PropertyCard key={p.id} property={p} />)}
+              <div className="space-y-2 text-[14px] border-t border-white/10 pt-6 mb-8">
+                <a href={`tel:${property.agent.phone}`} className="block text-bone/80 hover:text-bronze-soft transition-colors">{property.agent.phone}</a>
+                <a href={`mailto:${property.agent.email}`} className="block text-bone/50 hover:text-bronze-soft transition-colors">{property.agent.email}</a>
               </div>
+              <form className="space-y-6">
+                <input className="field text-bone" placeholder="Your name" aria-label="Your name" />
+                <input className="field text-bone" type="email" placeholder="Email" aria-label="Email" />
+                <textarea
+                  className="field text-bone resize-none"
+                  rows={2}
+                  aria-label="Message"
+                  defaultValue={`I would like to know more about ${property.title}.`}
+                />
+                <Link href="/contact" className="btn btn-light w-full">Request details</Link>
+              </form>
             </div>
-          )}
+          </aside>
         </div>
       </div>
+
+      <section className="bg-travertine py-20 md:py-28">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-12">
+          <div className="flex items-end justify-between mb-14">
+            <h2 className="font-display text-[clamp(32px,3.4vw,52px)] text-noir leading-none">
+              You may also <em className="text-bronze">consider</em>
+            </h2>
+            <Link href="/properties" className="link-draw text-[11px] tracking-[0.28em] uppercase text-noir">
+              All residences →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-14">
+            {fallbackRelated.map((p) => (
+              <PropertyCard key={p.id} property={p} tone="light" />
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

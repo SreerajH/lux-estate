@@ -1,132 +1,96 @@
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { MapPin, Bed, Bath, Square } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import { cn, formatNumber } from '@/lib/utils'
 import type { Property } from '@/lib/properties'
 
 interface PropertyCardProps {
   property: Property
   large?: boolean
+  index?: number
+  tone?: 'dark' | 'light'
   className?: string
 }
 
-export default function PropertyCard({ property, large = false, className }: PropertyCardProps) {
-  const [imgIndex, setImgIndex] = useState(0)
-  const [hovered, setHovered] = useState(false)
+export default function PropertyCard({ property, large = false, index, tone = 'dark', className }: PropertyCardProps) {
+  const dark = tone === 'dark'
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 32 }}
+    <motion.article
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className={cn('group relative bg-graphite overflow-hidden cursor-pointer', className)}
-      style={{ borderRadius: '4px', boxShadow: 'var(--shadow-card)' }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => { setHovered(false); setImgIndex(0) }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+      className={cn('group', className)}
     >
       <Link href={`/properties/${property.slug}`} className="block">
-        <div
-          className={cn('relative overflow-hidden', large ? 'aspect-[4/3]' : 'aspect-[3/4]')}
-        >
-          {property.images.map((src, i) => (
+        <div className={cn('relative overflow-hidden', large ? 'aspect-[16/11]' : 'aspect-[4/5]', dark ? 'bg-char' : 'bg-sand')}>
+          <Image
+            src={property.images[0]}
+            alt={property.title}
+            fill
+            sizes={large ? '(min-width: 1024px) 66vw, 100vw' : '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'}
+            className="object-cover transition-transform duration-[1600ms] ease-lux group-hover:scale-[1.05]"
+          />
+          {property.images[1] && (
             <Image
-              key={i}
-              src={src}
-              alt={`${property.title} image ${i + 1}`}
+              src={property.images[1]}
+              alt=""
               fill
-              className={cn(
-                'object-cover transition-all duration-600',
-                i === imgIndex ? 'opacity-100 scale-[1.04]' : 'opacity-0 scale-100',
-                hovered && i === imgIndex ? 'scale-[1.04]' : ''
-              )}
-              style={{
-                transition: 'opacity 0.6s ease, transform 0.6s ease',
-                transform: hovered ? 'scale(1.04)' : 'scale(1.0)',
-              }}
+              sizes={large ? '66vw' : '33vw'}
+              className="object-cover opacity-0 transition-opacity duration-[900ms] ease-lux group-hover:opacity-100"
             />
-          ))}
-
-          {property.images.length > 1 && hovered && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
-              {property.images.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={(e) => { e.preventDefault(); setImgIndex(i) }}
-                  className={cn('w-1.5 h-1.5 rounded-full transition-all', i === imgIndex ? 'bg-gold w-4' : 'bg-white/50')}
-                  aria-label={`View image ${i + 1}`}
-                />
-              ))}
-            </div>
           )}
+          <div className="absolute inset-0 bg-gradient-to-t from-noir/40 via-transparent to-noir/20" />
 
-          {property.tags.length > 0 && (
-            <div className="absolute top-4 left-4 z-20">
-              <span className="bg-gold text-obsidian text-[10px] tracking-[0.1em] uppercase font-body font-medium px-2 py-1" style={{ borderRadius: '2px' }}>
+          <div className="absolute top-5 left-5 right-5 flex items-start justify-between">
+            {property.tags[0] ? (
+              <span className="text-[10px] tracking-[0.26em] uppercase text-bone bg-noir/35 backdrop-blur-md px-3 py-1.5">
                 {property.tags[0]}
               </span>
-            </div>
-          )}
-
-          {property.isExclusive && (
-            <div className="absolute top-4 right-4 z-20">
-              <span className="bg-obsidian/80 border border-gold/50 text-gold text-[10px] tracking-[0.1em] uppercase font-body font-medium px-2 py-1" style={{ borderRadius: '2px' }}>
-                Exclusive
-              </span>
-            </div>
-          )}
-
-          <div
-            className={cn(
-              'absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-obsidian/95 via-obsidian/50 to-transparent p-6 transition-all duration-400',
-              hovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            ) : (
+              <span />
             )}
-            style={{ transition: 'opacity 0.4s ease, transform 0.4s ease' }}
-          >
-            <p className="text-ivory/60 text-[10px] tracking-[0.1em] uppercase font-body mb-1">{property.priceLabel}</p>
-            <p className="font-display text-ivory font-semibold" style={{ fontSize: '28px' }}>{property.priceDisplay}</p>
-            <div className="flex gap-4 mt-3">
-              {[
-                { icon: Bed, value: property.specs.beds, label: 'Beds' },
-                { icon: Bath, value: property.specs.baths, label: 'Baths' },
-                { icon: Square, value: formatNumber(property.specs.sqft), label: 'Sq Ft' },
-              ].map(({ icon: Icon, value, label }) => (
-                <div key={label} className="flex items-center gap-1.5 text-ivory/70">
-                  <Icon size={12} />
-                  <span className="text-[12px] font-body">{value}</span>
-                </div>
-              ))}
-            </div>
+            {property.isExclusive && (
+              <span className="font-display italic text-[15px] text-bone/90">Exclusive</span>
+            )}
           </div>
+
+          <span className="absolute bottom-5 right-5 w-11 h-11 rounded-full bg-bone text-noir flex items-center justify-center scale-75 opacity-0 transition-all duration-700 ease-lux group-hover:scale-100 group-hover:opacity-100">
+            <ArrowUpRight size={16} strokeWidth={1.25} />
+          </span>
         </div>
 
-        <div className="p-5">
-          <h3 className="font-display text-ivory text-xl font-normal mb-1 group-hover:text-gold transition-colors duration-200">
-            {property.title}
-          </h3>
-          <div className="flex items-center gap-1 text-ivory/50">
-            <MapPin size={11} />
-            <span className="text-[12px] font-body">{property.location.neighborhood}, {property.location.city}</span>
+        <div className={cn('pt-6 border-b pb-6', dark ? 'border-white/10' : 'border-sand')}>
+          <div className={cn('flex items-center justify-between text-[11px] tracking-[0.24em] uppercase', dark ? 'text-bone/45' : 'text-taupe')}>
+            <span>
+              {typeof index === 'number' && <span className={dark ? 'text-bronze-soft' : 'text-bronze'}>No. {String(index + 1).padStart(2, '0')} — </span>}
+              {property.location.neighborhood}, {property.location.city}
+            </span>
           </div>
-
-          <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/10">
-            {[
-              { icon: Bed, value: `${property.specs.beds} Beds` },
-              { icon: Bath, value: `${property.specs.baths} Baths` },
-              { icon: Square, value: `${formatNumber(property.specs.sqft)} sq ft` },
-            ].map(({ icon: Icon, value }) => (
-              <div key={value} className="flex items-center gap-1.5 text-ivory/40">
-                <Icon size={11} />
-                <span className="text-[11px] font-body tracking-wide">{value}</span>
-              </div>
-            ))}
+          <div className="mt-3 flex items-baseline justify-between gap-6">
+            <h3
+              className={cn(
+                'font-display leading-[1.1] transition-colors duration-500',
+                large ? 'text-[clamp(28px,2.6vw,40px)]' : 'text-[26px]',
+                dark ? 'text-bone group-hover:text-bronze-soft' : 'text-noir group-hover:text-bronze'
+              )}
+            >
+              {property.title}
+            </h3>
+            <p className={cn('font-display text-[19px] whitespace-nowrap', dark ? 'text-bone/80' : 'text-noir/80')}>
+              {property.priceDisplay}
+            </p>
           </div>
+          <p className={cn('mt-3 text-[13px] tracking-[0.06em]', dark ? 'text-bone/45' : 'text-taupe')}>
+            {property.specs.beds} bedrooms <span className="mx-2 opacity-50">/</span> {property.specs.baths} baths
+            <span className="mx-2 opacity-50">/</span> {formatNumber(property.specs.sqft)} sq ft
+          </p>
         </div>
       </Link>
-    </motion.div>
+    </motion.article>
   )
 }

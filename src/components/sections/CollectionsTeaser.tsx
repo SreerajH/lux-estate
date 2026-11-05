@@ -3,98 +3,67 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion'
 
+/**
+ * The Aperture — an arched window that opens to full bleed as you scroll.
+ * The arch is the site's architectural motif.
+ */
 export default function CollectionsTeaser() {
   const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
 
-  const titleLeft = useTransform(scrollYProgress, [0.1, 0.6], ['0%', '-8%'])
-  const titleRight = useTransform(scrollYProgress, [0.1, 0.6], ['0%', '8%'])
-  const scale = useTransform(scrollYProgress, [0, 0.4], [1.1, 1.0])
-  const opacity = useTransform(scrollYProgress, [0, 0.1], [0.5, 1])
+  // window grows from a narrow arch to the full viewport
+  const inset = useTransform(scrollYProgress, [0, 0.55], [30, 0])
+  const insetY = useTransform(scrollYProgress, [0, 0.55], [14, 0])
+  const radius = useTransform(scrollYProgress, [0, 0.5], [50, 0])
+  const clip = useMotionTemplate`inset(${insetY}% ${inset}% 0% ${inset}% round ${radius}vw ${radius}vw 0 0)`
+  const imgScale = useTransform(scrollYProgress, [0, 0.6], [1.25, 1])
 
-  const titleStyle = { fontSize: 'clamp(2rem, 5vw, 5rem)' } as React.CSSProperties
+  const preOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0])
+  const postOpacity = useTransform(scrollYProgress, [0.5, 0.68], [0, 1])
+  const postY = useTransform(scrollYProgress, [0.5, 0.7], [40, 0])
+  const shade = useTransform(scrollYProgress, [0.3, 0.55], [0, 0.62])
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-obsidian" style={{ minHeight: '80vh' }}>
-      <motion.div className="absolute inset-0" style={{ scale, opacity }}>
-        <Image
-          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&auto=format&fit=crop&q=80"
-          alt="Curated estates collection"
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-obsidian/60" />
-      </motion.div>
-
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-[80vh] text-center px-10">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-gold text-[11px] tracking-[0.3em] uppercase font-body font-medium mb-6"
+    <section ref={ref} className="relative bg-bone" style={{ height: '260vh' }}>
+      <div className="sticky top-0 h-[100svh] overflow-hidden">
+        {/* intro copy, sits behind the arch */}
+        <motion.div
+          style={{ opacity: preOpacity }}
+          className="absolute inset-x-0 top-[12vh] md:top-[10vh] z-0 text-center px-5 pointer-events-none"
         >
-          2024 Collection
-        </motion.p>
+          <p className="eyebrow text-bronze">An Invitation</p>
+        </motion.div>
 
-        <div className="overflow-hidden w-full px-4">
-          <div className="flex flex-col md:flex-row gap-0 items-center justify-center w-full">
-            <motion.span
-              style={{ x: titleLeft, ...titleStyle }}
-              className="font-display text-ivory font-light leading-none px-2 text-center"
-            >
-              Curated
-            </motion.span>
-            <span className="font-display text-ivory font-light leading-none hidden md:inline px-4" style={titleStyle}>
-              &nbsp;
-            </span>
-            <motion.span
-              style={{ x: titleRight, ...titleStyle }}
-              className="font-display text-gold font-light leading-none px-2 text-center"
-            >
-              Estates
-            </motion.span>
-          </div>
-        </div>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-mist/60 font-body text-base md:text-lg max-w-xl mt-6 mb-10 leading-relaxed"
-        >
-          Scroll to explore our most coveted properties — each one handpicked for its architectural excellence and absolute rarity.
-        </motion.p>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-ivory/40 text-[10px] tracking-[0.3em] uppercase font-body"
-        >
-          Scroll to explore
-        </motion.p>
+        <motion.div className="absolute inset-0 z-10" style={{ clipPath: clip }}>
+          <motion.div className="absolute inset-0" style={{ scale: imgScale }}>
+            <Image
+              src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=2400&auto=format&fit=crop&q=80"
+              alt="Glass-walled pavilion opening onto a pool terrace"
+              fill
+              sizes="100vw"
+              className="object-cover"
+            />
+          </motion.div>
+          <motion.div className="absolute inset-0 bg-noir" style={{ opacity: shade }} />
+        </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-16 flex flex-wrap gap-4 justify-center"
+          style={{ opacity: postOpacity, y: postY }}
+          className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center text-bone px-5"
         >
-          {['Oceanfront Villas', 'Manhattan Penthouses', 'Alpine Retreats', 'Historic Estates'].map((col) => (
-            <Link
-              key={col}
-              href="/collections"
-              className="px-6 py-3 border border-ivory/20 text-ivory/70 text-[12px] tracking-[0.1em] uppercase font-body hover:border-gold hover:text-gold transition-all duration-300"
-              style={{ borderRadius: '2px' }}
-            >
-              {col}
-            </Link>
-          ))}
+          <p className="eyebrow text-bronze-soft mb-8">Off-market</p>
+          <h2 className="font-display text-[clamp(38px,6vw,96px)] leading-[1.02] tracking-[-0.02em] max-w-[14ch]">
+            Most of our homes are <em className="text-bronze-soft">never</em> listed.
+          </h2>
+          <p className="mt-8 max-w-md text-bone/70 text-[16px] leading-relaxed">
+            Two in three of our sales happen privately, by introduction. Tell us what you are looking for, and we will tell you what exists.
+          </p>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <Link href="/contact" className="btn btn-light">Request private access</Link>
+            <Link href="/collections" className="btn btn-ghost">Browse collections</Link>
+          </div>
         </motion.div>
       </div>
     </section>

@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Image from 'next/image'
-import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { X, ArrowLeft, ArrowRight, Expand } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { cn } from '@/lib/utils'
 
 interface PropertyGalleryProps {
   images: string[]
@@ -11,69 +12,93 @@ interface PropertyGalleryProps {
 }
 
 export default function PropertyGallery({ images, title }: PropertyGalleryProps) {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [active, setActive] = useState(0)
+  const [lightbox, setLightbox] = useState(false)
 
-  const prev = () => setActiveIndex((i) => (i - 1 + images.length) % images.length)
-  const next = () => setActiveIndex((i) => (i + 1) % images.length)
+  const prev = useCallback(() => setActive((i) => (i - 1 + images.length) % images.length), [images.length])
+  const next = useCallback(() => setActive((i) => (i + 1) % images.length), [images.length])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prev()
+      if (e.key === 'ArrowRight') next()
+      if (e.key === 'Escape') setLightbox(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [prev, next])
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-2 h-[70vh] min-h-[500px]">
-        <div className="relative overflow-hidden cursor-pointer" onClick={() => setLightboxOpen(true)}>
-          <Image
-            src={images[activeIndex]}
-            alt={`${title} — image ${activeIndex + 1}`}
-            fill
-            priority
-            className="object-cover transition-opacity duration-400"
-          />
-          <div className="absolute inset-0 bg-obsidian/0 hover:bg-obsidian/10 transition-all duration-300" />
-          <button onClick={(e) => { e.stopPropagation(); prev() }} className="absolute left-4 top-1/2 -translate-y-1/2 bg-obsidian/60 hover:bg-obsidian/80 text-ivory p-2 transition-all" style={{ borderRadius: '2px' }} aria-label="Previous image">
-            <ChevronLeft size={20} />
-          </button>
-          <button onClick={(e) => { e.stopPropagation(); next() }} className="absolute right-4 top-1/2 -translate-y-1/2 bg-obsidian/60 hover:bg-obsidian/80 text-ivory p-2 transition-all" style={{ borderRadius: '2px' }} aria-label="Next image">
-            <ChevronRight size={20} />
-          </button>
-          <div className="absolute bottom-4 right-4 bg-obsidian/70 text-ivory text-[11px] font-body px-3 py-1.5 tracking-wide" style={{ borderRadius: '2px' }}>
-            {activeIndex + 1} / {images.length}
-          </div>
-        </div>
+      <div className="relative h-[62svh] md:h-[82svh] min-h-[420px] overflow-hidden bg-char">
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={active}
+            className="absolute inset-0"
+            initial={{ clipPath: 'inset(0 0 0 100%)' }}
+            animate={{ clipPath: 'inset(0 0 0 0%)' }}
+            exit={{ opacity: 0.6, transition: { duration: 1 } }}
+            transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1] }}
+          >
+            <Image src={images[active]} alt={`${title} — view ${active + 1}`} fill priority sizes="100vw" className="object-cover" />
+          </motion.div>
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-t from-noir/50 via-transparent to-transparent pointer-events-none" />
 
-        <div className="hidden md:flex flex-col gap-2 overflow-y-auto">
+        <div className="absolute bottom-6 md:bottom-10 inset-x-0 max-w-[1600px] mx-auto px-5 md:px-12 flex items-end justify-between text-bone">
+          <div className="flex items-center gap-3">
+            <button onClick={prev} aria-label="Previous image" className="w-12 h-12 rounded-full border border-bone/40 flex items-center justify-center hover:bg-bone hover:text-noir transition-colors duration-500">
+              <ArrowLeft size={16} strokeWidth={1.25} />
+            </button>
+            <button onClick={next} aria-label="Next image" className="w-12 h-12 rounded-full border border-bone/40 flex items-center justify-center hover:bg-bone hover:text-noir transition-colors duration-500">
+              <ArrowRight size={16} strokeWidth={1.25} />
+            </button>
+            <span className="ml-3 text-[12px] tracking-[0.24em] tabular-nums">
+              0{active + 1} <span className="text-bone/40">/ 0{images.length}</span>
+            </span>
+          </div>
+          <button onClick={() => setLightbox(true)} className="flex items-center gap-2 text-[11px] tracking-[0.26em] uppercase hover:text-bronze-soft transition-colors">
+            <Expand size={14} strokeWidth={1.25} /> Full screen
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-noir">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-12 py-4 flex gap-3 overflow-x-auto no-scrollbar">
           {images.map((img, i) => (
-            <div
+            <button
               key={i}
-              className={`relative flex-shrink-0 cursor-pointer transition-all duration-200 ${i === activeIndex ? 'ring-2 ring-gold' : 'opacity-60 hover:opacity-100'}`}
-              style={{ height: `calc((70vh - ${(images.length - 1) * 8}px) / ${images.length})`, minHeight: '80px' }}
-              onClick={() => setActiveIndex(i)}
+              onClick={() => setActive(i)}
+              aria-label={`Show image ${i + 1}`}
+              className={cn('relative shrink-0 w-28 md:w-36 aspect-[3/2] overflow-hidden transition-opacity duration-500', i === active ? 'opacity-100' : 'opacity-40 hover:opacity-80')}
             >
-              <Image src={img} alt={`${title} thumbnail ${i + 1}`} fill className="object-cover" />
-            </div>
+              <Image src={img} alt="" fill sizes="150px" className="object-cover" />
+              {i === active && <span className="absolute inset-x-0 bottom-0 h-px bg-bronze-soft" />}
+            </button>
           ))}
         </div>
       </div>
 
       <AnimatePresence>
-        {lightboxOpen && (
+        {lightbox && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-obsidian/98 flex items-center justify-center"
-            onClick={() => setLightboxOpen(false)}
+            className="fixed inset-0 z-[60] bg-noir/[0.97] flex items-center justify-center"
+            onClick={() => setLightbox(false)}
           >
-            <button className="absolute top-6 right-6 text-ivory/60 hover:text-ivory" aria-label="Close lightbox">
-              <X size={28} />
+            <button className="absolute top-6 right-6 text-bone/70 hover:text-bone" aria-label="Close">
+              <X size={28} strokeWidth={1} />
             </button>
-            <div className="relative w-full max-w-5xl aspect-[16/10] mx-8" onClick={(e) => e.stopPropagation()}>
-              <Image src={images[activeIndex]} alt={title} fill className="object-contain" />
+            <div className="relative w-full max-w-6xl aspect-[16/10] mx-6" onClick={(e) => e.stopPropagation()}>
+              <Image src={images[active]} alt={title} fill sizes="100vw" className="object-contain" />
             </div>
-            <button onClick={(e) => { e.stopPropagation(); prev() }} className="absolute left-6 top-1/2 -translate-y-1/2 text-ivory/60 hover:text-ivory p-4" aria-label="Previous">
-              <ChevronLeft size={32} />
+            <button onClick={(e) => { e.stopPropagation(); prev() }} className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-bone/60 hover:text-bone p-4" aria-label="Previous">
+              <ArrowLeft size={28} strokeWidth={1} />
             </button>
-            <button onClick={(e) => { e.stopPropagation(); next() }} className="absolute right-6 top-1/2 -translate-y-1/2 text-ivory/60 hover:text-ivory p-4" aria-label="Next">
-              <ChevronRight size={32} />
+            <button onClick={(e) => { e.stopPropagation(); next() }} className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-bone/60 hover:text-bone p-4" aria-label="Next">
+              <ArrowRight size={28} strokeWidth={1} />
             </button>
           </motion.div>
         )}

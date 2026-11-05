@@ -6,51 +6,41 @@ import PropertyCard from '@/components/property/PropertyCard'
 import { getFeaturedProperties } from '@/lib/properties'
 
 export default function FeaturedListings() {
-  const properties = getFeaturedProperties().slice(0, 4)
+  const p = getFeaturedProperties().slice(0, 4)
 
   return (
-    <section className="bg-obsidian py-[120px]">
-      <div className="max-w-[1440px] mx-auto px-10">
+    <section className="bg-noir text-bone py-28 md:py-40">
+      <div className="max-w-[1600px] mx-auto px-5 md:px-12">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16"
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row justify-between md:items-end gap-8 mb-16 md:mb-24"
         >
           <div>
-            <p className="text-gold text-[11px] tracking-[0.3em] uppercase font-body font-medium mb-3">
-              Featured Properties
-            </p>
-            <h2 className="font-display text-ivory font-light leading-tight" style={{ fontSize: 'clamp(36px, 4vw, 56px)' }}>
-              Exceptional Estates,<br />Handpicked for You
+            <p className="eyebrow text-bronze-soft mb-6">Selected Residences — {new Date().getFullYear()}</p>
+            <h2 className="font-display text-[clamp(40px,5.5vw,88px)] leading-[0.98] tracking-[-0.02em]">
+              The current
+              <br />
+              <em className="text-bronze-soft">portfolio</em>
             </h2>
           </div>
-          <Link
-            href="/properties"
-            className="mt-6 md:mt-0 text-gold text-[12px] tracking-[0.1em] uppercase font-body border-b border-gold/40 hover:border-gold pb-1 transition-colors duration-200"
-          >
-            View All Properties →
-          </Link>
+          <div className="md:max-w-xs">
+            <p className="text-bone/55 text-[15px] leading-relaxed mb-8">
+              Each residence is visited, photographed and represented by a single advisor who knows every room.
+            </p>
+            <Link href="/properties" className="link-draw text-[11px] tracking-[0.28em] uppercase text-bone">
+              All residences <span aria-hidden>→</span>
+            </Link>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {properties[0] && (
-            <div className="md:col-span-2">
-              <PropertyCard property={properties[0]} large className="h-full" />
-            </div>
-          )}
-          {properties[1] && (
-            <PropertyCard property={properties[1]} />
-          )}
-          {properties[2] && (
-            <PropertyCard property={properties[2]} />
-          )}
-          {properties[3] && (
-            <div className="md:col-span-2">
-              <PropertyCard property={properties[3]} large className="h-full" />
-            </div>
-          )}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-16 md:gap-y-24">
+          {p[0] && <PropertyCard property={p[0]} index={0} large className="md:col-span-8" />}
+          {p[1] && <PropertyCard property={p[1]} index={1} className="md:col-span-4 md:mt-40" />}
+          {p[2] && <PropertyCard property={p[2]} index={2} className="md:col-span-4" />}
+          {p[3] && <PropertyCard property={p[3]} index={3} large className="md:col-span-8 md:mt-24" />}
         </div>
       </div>
     </section>

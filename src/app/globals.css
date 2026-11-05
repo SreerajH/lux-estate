@@ -1,29 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────
+   VELMONT — "Travertine & Noir"
+   Warm black, travertine stone, loden green, a whisper of bronze.
+   ───────────────────────────────────────────────────────────── */
+
 @theme {
-  --color-obsidian: #0A0A0B;
-  --color-ivory: #F5F0E8;
-  --color-gold: #C9A96E;
-  --color-gold-light: #E8D5A3;
-  --color-gold-dark: #A68450;
-  --color-mist: #E8E4DC;
-  --color-slate: #4A4A52;
-  --color-graphite: #1C1C22;
+  --color-noir: #0d0c0a;
+  --color-umber: #16130f;
+  --color-char: #26221c;
+  --color-loden: #20261f;
+  --color-loden-deep: #171c16;
+  --color-travertine: #ebe4d8;
+  --color-bone: #f6f2eb;
+  --color-sand: #d8cebd;
+  --color-taupe: #8c8275;
+  --color-stone: #575047;
+  --color-bronze: #a5865a;
+  --color-bronze-soft: #cdb68e;
 
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
+}
 
-  --shadow-card: 0 4px 40px rgba(0,0,0,0.08);
-  --shadow-card-hover: 0 20px 60px rgba(0,0,0,0.15);
-  --shadow-gold: 0 0 40px rgba(201,169,110,0.15);
-
-  --animate-fade-up: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-fade-in: fadeIn 0.6s ease both;
-  --animate-pulse-gold: pulseGold 2s ease-in-out infinite;
-
-  --radius-card: 4px;
-  --radius-button: 2px;
+@theme inline {
+  --font-display: var(--font-bodoni), 'Didot', Georgia, serif;
+  --font-body: var(--font-jost), 'Futura', system-ui, sans-serif;
 }
 
 @layer base {
@@ -35,64 +37,175 @@
 
   body {
     font-family: var(--font-body);
-    background-color: var(--color-ivory);
-    color: var(--color-slate);
+    background-color: var(--color-noir);
+    color: var(--color-stone);
+    font-weight: 300;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--color-bronze);
+    color: var(--color-bone);
   }
 
   *:focus-visible {
-    outline: 2px solid #C9A96E;
-    outline-offset: 2px;
+    outline: 1px solid var(--color-bronze);
+    outline-offset: 3px;
+  }
+
+  input, textarea, select, button {
+    font: inherit;
   }
 }
 
-@keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(32px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-@keyframes pulseGold {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes pulseGoldBorder {
-  0%, 100% {
-    box-shadow: 0 0 0px rgba(201, 169, 110, 0);
-    border-color: rgba(201, 169, 110, 0.2);
+@layer components {
+  /* small tracked label — the brand's "engraving" */
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
   }
-  50% {
-    box-shadow: 0 0 20px rgba(201, 169, 110, 0.3), 0 0 40px rgba(201, 169, 110, 0.1);
-    border-color: rgba(201, 169, 110, 0.7);
+
+  /* arched window — the architectural motif used across the site */
+  .arch {
+    border-radius: 999px 999px 0 0;
+    overflow: hidden;
+  }
+
+  /* hairline-underlined field */
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    border-color: color-mix(in oklab, currentColor 22%, transparent);
+    padding: 14px 0 12px;
+    font-size: 15px;
+    font-weight: 300;
+    transition: border-color 0.4s var(--ease-lux);
+    border-radius: 0;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-bronze-soft);
+  }
+  .field::placeholder {
+    color: color-mix(in oklab, currentColor 35%, transparent);
+  }
+
+  /* text link with a drawn underline */
+  .link-draw {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .link-draw::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0.35);
+    transform-origin: left;
+    transition: transform 0.6s var(--ease-lux);
+  }
+  .link-draw:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* primary button: fills from the bottom on hover */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    padding: 1.1rem 2.2rem;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    overflow: hidden;
+    isolation: isolate;
+    transition: color 0.6s var(--ease-lux), border-color 0.6s var(--ease-lux);
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.6s var(--ease-lux);
+  }
+  .btn:hover::before {
+    transform: scaleY(1);
+  }
+  .btn-light {
+    background: var(--color-bone);
+    color: var(--color-noir);
+  }
+  .btn-light::before {
+    background: var(--color-bronze-soft);
+  }
+  .btn-ghost {
+    border: 1px solid color-mix(in oklab, var(--color-bone) 35%, transparent);
+    color: var(--color-bone);
+  }
+  .btn-ghost::before {
+    background: var(--color-bone);
+  }
+  .btn-ghost:hover {
+    color: var(--color-noir);
+    border-color: var(--color-bone);
+  }
+  .btn-dark {
+    background: var(--color-noir);
+    color: var(--color-bone);
+  }
+  .btn-dark::before {
+    background: var(--color-bronze);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* film grain over dark photography */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }
 
-.animate-pulse-gold-border {
-  animation: pulseGoldBorder 3s ease-in-out infinite;
-  border: 1px solid rgba(201, 169, 110, 0.2);
-}
-
-.pulse-gold-border {
-  border: 1px solid rgba(201, 169, 110, 0.2) !important;
-  animation: pulseGoldBorder 2.5s ease-in-out infinite !important;
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+@keyframes kenburns {
+  0% { transform: scale(1.12); }
+  100% { transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

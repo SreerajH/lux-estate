@@ -1,16 +1,19 @@
 'use client'
 
-import { useState } from 'react'
-import { ChevronDown, Search, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { ChevronDown, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { PROPERTIES } from '@/lib/properties'
 
-interface Filters {
+export interface Filters {
   location: string
   minPrice: number
   maxPrice: number
   beds: string
   type: string
 }
+
+export const DEFAULT_FILTERS: Filters = { location: '', minPrice: 0, maxPrice: 50000000, beds: 'Any', type: '' }
 
 interface PropertyFiltersProps {
   filters: Filters
@@ -21,72 +24,89 @@ interface PropertyFiltersProps {
   onSortChange: (sort: string) => void
 }
 
-const LOCATIONS = ['All Locations', 'New York', 'Los Angeles', 'Miami', 'San Francisco', 'Aspen', 'The Hamptons']
-const BEDS = ['Any', '2+', '3+', '4+', '5+', '6+']
-const TYPES = ['All Types', 'Penthouse', 'Villa', 'Estate', 'Townhouse']
-const SORTS = ['Newest First', 'Price: High to Low', 'Price: Low to High', 'Most Viewed']
+const LOCATIONS = ['All locations', ...Array.from(new Set(PROPERTIES.map((p) => p.location.city)))]
+const BEDS = ['Any', '4+', '5+', '6+', '7+']
+const TYPES = ['All types', 'Penthouse', 'Villa', 'Estate']
+export const SORTS = ['Featured', 'Price: high to low', 'Price: low to high']
 
 export default function PropertyFilters({ filters, onChange, resultCount, totalCount, sortBy, onSortChange }: PropertyFiltersProps) {
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [open, setOpen] = useState<string | null>(null)
+  const barRef = useRef<HTMLDivElement>(null)
 
-  const toggle = (name: string) => setOpenDropdown(openDropdown === name ? null : name)
+  useEffect(() => {
+    const close = (e: MouseEvent) => {
+      if (barRef.current && !barRef.current.contains(e.target as Node)) setOpen(null)
+    }
+    document.addEventListener('mousedown', close)
+    return () => document.removeEventListener('mousedown', close)
+  }, [])
 
-  const activeChips: { label: string; key: keyof Filters }[] = []
-  if (filters.location) activeChips.push({ label: filters.location, key: 'location' })
-  if (filters.beds !== 'Any' && filters.beds) activeChips.push({ label: `${filters.beds} Beds`, key: 'beds' })
-  if (filters.type) activeChips.push({ label: filters.type, key: 'type' })
+  const chips: { label: string; key: keyof Filters }[] = []
+  if (filters.location) chips.push({ label: filters.location, key: 'location' })
+  if (filters.beds && filters.beds !== 'Any') chips.push({ label: `${filters.beds} bedrooms`, key: 'beds' })
+  if (filters.type) chips.push({ label: filters.type, key: 'type' })
 
-  const removeFilter = (key: keyof Filters) => {
-    const defaults: Partial<Filters> = { location: '', beds: 'Any', type: '', minPrice: 0, maxPrice: 50000000 }
-    onChange({ ...filters, [key]: defaults[key] ?? '' })
-  }
+  const dropdowns = [
+    {
+      name: 'location',
+      label: 'Location',
+      value: filters.location || 'Anywhere',
+      options: LOCATIONS,
+      onSelect: (v: string) => onChange({ ...filters, location: v === 'All locations' ? '' : v }),
+    },
+    {
+      name: 'type',
+      label: 'Residence',
+      value: filters.type || 'All types',
+      options: TYPES,
+      onSelect: (v: string) => onChange({ ...filters, type: v === 'All types' ? '' : v }),
+    },
+    {
+      name: 'beds',
+      label: 'Bedrooms',
+      value: filters.beds === 'Any' || !filters.beds ? 'Any' : filters.beds,
+      options: BEDS,
+      onSelect: (v: string) => onChange({ ...filters, beds: v }),
+    },
+    {
+      name: 'sort',
+      label: 'Order',
+      value: sortBy,
+      options: SORTS,
+      onSelect: (v: string) => onSortChange(v),
+    },
+  ]
 
   return (
-    <div className="sticky top-20 z-40 bg-obsidian/95 backdrop-blur-xl border-b border-white/10">
-      <div className="max-w-[1440px] mx-auto px-10 py-4">
-        <div className="flex flex-wrap items-center gap-3">
-          {[
-            {
-              name: 'location', label: filters.location || 'Location',
-              options: LOCATIONS,
-              onSelect: (v: string) => onChange({ ...filters, location: v === 'All Locations' ? '' : v }),
-            },
-            {
-              name: 'beds', label: filters.beds === 'Any' || !filters.beds ? 'Beds' : `${filters.beds} Beds`,
-              options: BEDS,
-              onSelect: (v: string) => onChange({ ...filters, beds: v }),
-            },
-            {
-              name: 'type', label: filters.type || 'Property Type',
-              options: TYPES,
-              onSelect: (v: string) => onChange({ ...filters, type: v === 'All Types' ? '' : v }),
-            },
-          ].map((dd) => (
+    <div ref={barRef} className="sticky top-[72px] z-30 bg-bone/90 backdrop-blur-xl border-b border-sand text-noir">
+      <div className="max-w-[1600px] mx-auto px-5 md:px-12">
+        <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(0,1fr))_auto] md:divide-x divide-sand">
+          {dropdowns.map((dd) => (
             <div key={dd.name} className="relative">
               <button
-                onClick={() => toggle(dd.name)}
-                className={cn(
-                  'flex items-center gap-2 px-4 py-2.5 border text-[12px] tracking-[0.08em] uppercase font-body transition-all duration-200',
-                  openDropdown === dd.name
-                    ? 'border-gold text-gold bg-gold/5'
-                    : 'border-white/20 text-ivory/70 hover:border-white/40 hover:text-ivory'
-                )}
-                style={{ borderRadius: '2px' }}
+                onClick={() => setOpen(open === dd.name ? null : dd.name)}
+                aria-expanded={open === dd.name}
+                className="w-full text-left py-4 md:px-6 md:first:pl-0 flex items-center justify-between gap-3 group"
               >
-                {dd.label}
-                <ChevronDown size={12} className={cn('transition-transform duration-200', openDropdown === dd.name && 'rotate-180')} />
+                <span>
+                  <span className="block text-[10px] tracking-[0.26em] uppercase text-taupe">{dd.label}</span>
+                  <span className="block font-display text-[19px] mt-0.5 group-hover:text-bronze transition-colors">{dd.value}</span>
+                </span>
+                <ChevronDown size={14} strokeWidth={1.25} className={cn('text-taupe transition-transform duration-300 mr-4 md:mr-0', open === dd.name && 'rotate-180')} />
               </button>
-
-              {openDropdown === dd.name && (
-                <div
-                  className="absolute top-full left-0 mt-2 min-w-[180px] bg-graphite/95 backdrop-blur-xl border border-gold/20 z-50 py-2"
-                  style={{ borderRadius: '4px', boxShadow: 'var(--shadow-card-hover)' }}
-                >
+              {open === dd.name && (
+                <div className="absolute top-full left-0 md:left-4 mt-px min-w-[220px] bg-bone border border-sand shadow-[0_30px_60px_-20px_rgba(13,12,10,0.25)] py-2 z-50">
                   {dd.options.map((opt) => (
                     <button
                       key={opt}
-                      onClick={() => { dd.onSelect(opt); setOpenDropdown(null) }}
-                      className="w-full text-left px-4 py-2.5 text-ivory/70 text-[12px] font-body hover:text-gold hover:bg-white/5 transition-colors"
+                      onClick={() => {
+                        dd.onSelect(opt)
+                        setOpen(null)
+                      }}
+                      className={cn(
+                        'w-full text-left px-5 py-2.5 text-[14px] hover:bg-travertine transition-colors',
+                        opt === dd.value ? 'text-bronze' : 'text-stone'
+                      )}
                     >
                       {opt}
                     </button>
@@ -95,54 +115,30 @@ export default function PropertyFilters({ filters, onChange, resultCount, totalC
               )}
             </div>
           ))}
-
-          <button
-            className="flex items-center gap-2 px-6 py-2.5 bg-gold text-obsidian text-[12px] tracking-[0.08em] uppercase font-body font-medium hover:bg-gold-light transition-colors ml-auto"
-            style={{ borderRadius: '2px' }}
-          >
-            <Search size={12} />
-            Search
-          </button>
+          <div className="hidden md:flex items-center pl-6 text-[11px] tracking-[0.22em] uppercase text-taupe whitespace-nowrap">
+            {resultCount} of {totalCount}
+          </div>
         </div>
 
-        <div className="flex items-center justify-between mt-3">
-          <div className="flex flex-wrap gap-2">
-            {activeChips.map((chip) => (
-              <span
-                key={chip.key}
-                className="flex items-center gap-1.5 px-3 py-1 bg-gold/10 border border-gold/30 text-gold text-[11px] tracking-wide font-body"
-                style={{ borderRadius: '2px' }}
-              >
+        {chips.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 pb-4 -mt-1">
+            {chips.map((chip) => (
+              <span key={chip.key} className="flex items-center gap-2 pl-3 pr-2 py-1 border border-sand text-[12px] text-stone">
                 {chip.label}
-                <button onClick={() => removeFilter(chip.key)} aria-label={`Remove ${chip.label} filter`}>
-                  <X size={10} />
+                <button
+                  onClick={() => onChange({ ...filters, [chip.key]: DEFAULT_FILTERS[chip.key] })}
+                  aria-label={`Remove ${chip.label}`}
+                  className="hover:text-bronze"
+                >
+                  <X size={12} strokeWidth={1.25} />
                 </button>
               </span>
             ))}
-            {activeChips.length > 0 && (
-              <button
-                onClick={() => onChange({ location: '', minPrice: 0, maxPrice: 50000000, beds: 'Any', type: '' })}
-                className="text-ivory/40 text-[11px] font-body hover:text-ivory transition-colors ml-1"
-              >
-                Clear all
-              </button>
-            )}
+            <button onClick={() => onChange(DEFAULT_FILTERS)} className="text-[12px] text-taupe hover:text-noir underline underline-offset-4 ml-2">
+              Clear all
+            </button>
           </div>
-
-          <div className="flex items-center gap-4">
-            <span className="text-ivory/40 text-[11px] font-body tracking-wide">
-              Showing {resultCount} of {totalCount} properties
-            </span>
-            <select
-              value={sortBy}
-              onChange={(e) => onSortChange(e.target.value)}
-              className="bg-transparent border border-white/20 text-ivory/70 text-[11px] font-body px-3 py-1.5 focus:outline-none focus:border-gold/50 cursor-pointer"
-              style={{ borderRadius: '2px' }}
-            >
-              {SORTS.map((s) => <option key={s} value={s} className="bg-graphite">{s}</option>)}
-            </select>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )
