@@ -81,7 +81,7 @@ export default function HeroSection() {
             </motion.p>
             <h1 className="font-display text-[clamp(38px,min(5vw,8.5svh),78px)] leading-[1.04] tracking-[-0.02em]">
               {['Homes of', 'quiet consequence.'].map((line, i) => (
-                <span key={line} className="block overflow-hidden pb-[0.08em]">
+                <span key={line} className="block overflow-hidden pb-[0.2em] -mb-[0.12em]">
                   <motion.span
                     className="block"
                     initial={{ y: '105%' }}

@@ -82,11 +82,11 @@ export default function PropertyFilters({ filters, onChange, resultCount, totalC
       <div className="max-w-[1600px] mx-auto px-5 md:px-12">
         <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(0,1fr))_auto] md:divide-x divide-sand">
           {dropdowns.map((dd) => (
-            <div key={dd.name} className="relative">
+            <div key={dd.name} className="relative md:[&:first-child>button]:pl-0">
               <button
                 onClick={() => setOpen(open === dd.name ? null : dd.name)}
                 aria-expanded={open === dd.name}
-                className="w-full text-left py-4 md:px-6 md:first:pl-0 flex items-center justify-between gap-3 group"
+                className="w-full text-left py-4 md:px-7 flex items-center justify-between gap-3 group"
               >
                 <span>
                   <span className="block text-[10px] tracking-[0.26em] uppercase text-taupe">{dd.label}</span>

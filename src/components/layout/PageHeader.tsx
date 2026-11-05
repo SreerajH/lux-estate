@@ -42,12 +42,12 @@ export default function PageHeader({ eyebrow, title, intro, image, aside }: Page
               <span className="h-px w-10 bg-bronze-soft/70" />
               {eyebrow}
             </motion.p>
-            <div className="overflow-hidden pb-[0.1em]">
+            <div className="overflow-hidden">
               <motion.h1
                 initial={{ y: '100%' }}
                 animate={{ y: 0 }}
                 transition={{ duration: 1.3, delay: 0.3, ease }}
-                className="font-display text-[clamp(44px,7vw,120px)] leading-[0.98] tracking-[-0.025em] max-w-[15ch]"
+                className="font-display text-[clamp(44px,7vw,120px)] leading-[1.02] tracking-[-0.025em] max-w-[15ch] pb-[0.2em] -mb-[0.1em]"
               >
                 {title}
               </motion.h1>

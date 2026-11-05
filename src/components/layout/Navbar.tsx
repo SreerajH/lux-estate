@@ -124,7 +124,7 @@ export default function Navbar() {
           >
             <ul className="flex flex-col gap-2">
               {[...navLinks, { href: '/contact', label: 'Enquire' }].map((link, i) => (
-                <li key={link.href} className="overflow-hidden">
+                <li key={link.href} className="overflow-hidden pb-2 -mb-2">
                   <motion.div
                     initial={{ y: '110%' }}
                     animate={{ y: 0 }}

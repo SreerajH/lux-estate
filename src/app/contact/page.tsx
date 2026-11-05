@@ -56,8 +56,8 @@ export default function ContactPage() {
               <span className="h-px w-10 bg-bronze-soft/70" />
               Private Enquiries
             </motion.p>
-            <div className="overflow-hidden pb-[0.1em]">
-              <motion.h1 initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1.3, delay: 0.3, ease }} className="font-display text-[clamp(48px,7vw,116px)] leading-[0.96] tracking-[-0.025em]">
+            <div className="overflow-hidden">
+              <motion.h1 initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1.3, delay: 0.3, ease }} className="font-display text-[clamp(48px,7vw,116px)] leading-[1.02] tracking-[-0.025em] pb-[0.2em] -mb-[0.1em]">
                 Begin, <em className="text-bronze-soft">quietly</em>.
               </motion.h1>
             </div>
