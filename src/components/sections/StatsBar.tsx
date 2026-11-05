@@ -44,10 +44,10 @@ function Counter({ target, prefix = '', suffix = '' }: { target: number; prefix?
 }
 
 function Word({ word, progress, range }: { word: string; progress: MotionValue<number>; range: [number, number] }) {
-  const opacity = useTransform(progress, range, [0.16, 1])
+  const opacity = useTransform(progress, range, [0.22, 1])
   const italic = word === 'extraordinary' || word === 'next.'
   return (
-    <motion.span style={{ opacity }} className={italic ? 'italic text-bronze' : undefined}>
+    <motion.span style={{ opacity }} className={italic ? 'text-bronze' : undefined}>
       {word}{' '}
     </motion.span>
   )
@@ -65,7 +65,7 @@ export default function StatsBar() {
           <p className="eyebrow text-bronze pt-3">The House of {BRAND.name}</p>
           <p
             ref={ref}
-            className="font-display text-[clamp(28px,3.6vw,56px)] leading-[1.18] tracking-[-0.015em] max-w-[22ch] lg:max-w-none"
+            className="font-body font-light text-[clamp(24px,2.7vw,40px)] leading-[1.38] tracking-[-0.015em] max-w-[34ch]"
           >
             {words.map((w, i) => (
               <Word key={i} word={w} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]} />
@@ -84,8 +84,8 @@ export default function StatsBar() {
               className="bg-bone pt-9 pb-9 pr-5 pl-5 md:pl-8 [&:nth-child(odd)]:pl-0 lg:[&:nth-child(odd)]:pl-8 lg:first:!pl-0"
             >
               <div
-                className="font-display text-[clamp(44px,5vw,76px)] leading-none text-noir"
-                style={{ fontVariationSettings: '"opsz" 36' }}
+                className="font-body font-extralight text-[clamp(44px,4.6vw,68px)] leading-none tracking-[-0.03em] text-noir"
+                
               >
                 <Counter target={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
               </div>

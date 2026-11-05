@@ -41,7 +41,7 @@ export default function EnquirySection() {
               ))}
               <div className="pl-4 pb-1">
                 <p className="text-[11px] tracking-[0.24em] uppercase text-bone/40">Replies within</p>
-                <p className="font-display text-[28px] leading-tight">two hours</p>
+                <p className="text-[20px] font-light leading-tight mt-1">Two hours</p>
               </div>
             </div>
           </motion.div>

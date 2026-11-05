@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Bodoni_Moda, Jost } from 'next/font/google'
+import { Bodoni_Moda, Manrope } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -13,10 +13,10 @@ const bodoni = Bodoni_Moda({
   display: 'swap',
 })
 
-const jost = Jost({
+const manrope = Manrope({
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
-  variable: '--font-jost',
+  weight: ['200', '300', '400', '500', '600'],
+  variable: '--font-manrope',
   display: 'swap',
 })
 
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bodoni.variable} ${jost.variable}`}>
+    <html lang="en" className={`${bodoni.variable} ${manrope.variable}`}>
       <body>
         <Navbar />
         <main>{children}</main>

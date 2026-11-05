@@ -90,7 +90,7 @@ export default function PropertyFilters({ filters, onChange, resultCount, totalC
               >
                 <span>
                   <span className="block text-[10px] tracking-[0.26em] uppercase text-taupe">{dd.label}</span>
-                  <span className="block font-display text-[19px] mt-0.5 group-hover:text-bronze transition-colors">{dd.value}</span>
+                  <span className="block text-[15px] font-medium mt-1 group-hover:text-bronze transition-colors">{dd.value}</span>
                 </span>
                 <ChevronDown size={14} strokeWidth={1.25} className={cn('text-taupe transition-transform duration-300 mr-4 md:mr-0', open === dd.name && 'rotate-180')} />
               </button>

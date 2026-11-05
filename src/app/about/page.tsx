@@ -64,15 +64,15 @@ export default function AboutPage() {
             </div>
             <div className="mt-12 flex gap-14">
               <div>
-                <p className="font-display text-[54px] leading-none text-noir">18</p>
+                <p className="font-body font-light text-[52px] leading-none tracking-[-0.02em] text-noir">18</p>
                 <p className="text-[11px] tracking-[0.22em] uppercase text-taupe mt-3">Years</p>
               </div>
               <div>
-                <p className="font-display text-[54px] leading-none text-noir">$2.8B</p>
+                <p className="font-body font-light text-[52px] leading-none tracking-[-0.02em] text-noir">$2.8B</p>
                 <p className="text-[11px] tracking-[0.22em] uppercase text-taupe mt-3">Placed</p>
               </div>
               <div>
-                <p className="font-display text-[54px] leading-none text-noir">3</p>
+                <p className="font-body font-light text-[52px] leading-none tracking-[-0.02em] text-noir">3</p>
                 <p className="text-[11px] tracking-[0.22em] uppercase text-taupe mt-3">Offices</p>
               </div>
             </div>

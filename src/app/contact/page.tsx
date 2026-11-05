@@ -74,7 +74,7 @@ export default function ContactPage() {
                       <Image src={a.photo} alt={a.name} fill sizes="60px" className="object-cover" />
                     </div>
                     <div>
-                      <p className="font-display text-[22px] leading-tight">{a.name}</p>
+                      <p className="text-[17px] font-medium leading-tight">{a.name}</p>
                       <p className="text-[12px] tracking-[0.14em] uppercase text-bone/40 mt-1">{a.specialty}</p>
                     </div>
                     <div className="col-span-2 sm:col-span-1 sm:text-right text-[13px] space-y-1 pl-[76px] sm:pl-0">
@@ -89,7 +89,7 @@ export default function ContactPage() {
             <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8">
               {OFFICES.map((o) => (
                 <div key={o.city}>
-                  <p className="font-display text-[24px] mb-3">{o.city}</p>
+                  <p className="text-[13px] tracking-[0.2em] uppercase font-medium text-bronze-soft mb-3">{o.city}</p>
                   <p className="text-bone/50 text-[14px] leading-relaxed">{o.address}</p>
                   <p className="text-bone/35 text-[13px] mt-2">{o.phone}</p>
                 </div>

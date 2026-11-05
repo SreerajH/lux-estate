@@ -33,17 +33,8 @@ export default function PropertyCard({ property, large = false, index, tone = 'd
             alt={property.title}
             fill
             sizes={large ? '(min-width: 1024px) 66vw, 100vw' : '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'}
-            className="object-cover transition-transform duration-[1600ms] ease-lux group-hover:scale-[1.05]"
+            className="object-cover transition-transform duration-[1600ms] ease-lux group-hover:scale-[1.04]"
           />
-          {property.images[1] && (
-            <Image
-              src={property.images[1]}
-              alt=""
-              fill
-              sizes={large ? '66vw' : '33vw'}
-              className="object-cover opacity-0 transition-opacity duration-[900ms] ease-lux group-hover:opacity-100"
-            />
-          )}
           <div className="absolute inset-0 bg-gradient-to-t from-noir/40 via-transparent to-noir/20" />
 
           <div className="absolute top-5 left-5 right-5 flex items-start justify-between">
@@ -55,7 +46,7 @@ export default function PropertyCard({ property, large = false, index, tone = 'd
               <span />
             )}
             {property.isExclusive && (
-              <span className="font-display italic text-[15px] text-bone/90">Exclusive</span>
+              <span className="text-[10px] tracking-[0.26em] uppercase text-noir bg-bone/90 px-3 py-1.5">Exclusive</span>
             )}
           </div>
 
@@ -81,7 +72,7 @@ export default function PropertyCard({ property, large = false, index, tone = 'd
             >
               {property.title}
             </h3>
-            <p className={cn('font-display text-[19px] whitespace-nowrap', dark ? 'text-bone/80' : 'text-noir/80')}>
+            <p className={cn('text-[16px] font-light tracking-[0.02em] whitespace-nowrap', dark ? 'text-bone/80' : 'text-noir/80')}>
               {property.priceDisplay}
             </p>
           </div>

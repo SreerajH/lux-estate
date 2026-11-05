@@ -64,7 +64,7 @@ export default async function PropertyDetailPage({ params }: Props) {
             </div>
             <div className="lg:text-right">
               <p className="text-[10px] tracking-[0.28em] uppercase text-bone/45 mb-2">{property.priceLabel}</p>
-              <p className="font-display text-[clamp(30px,3vw,46px)] leading-none" style={{ fontVariationSettings: '"opsz" 96' }}>
+              <p className="font-body font-light text-[clamp(28px,2.6vw,40px)] leading-none tracking-[-0.01em]">
                 {property.priceDisplay}
               </p>
             </div>
@@ -76,11 +76,11 @@ export default async function PropertyDetailPage({ params }: Props) {
 
       {/* specs rule */}
       <div className="border-b border-sand">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-12 grid grid-cols-2 md:grid-cols-5 gap-px bg-sand">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-12 grid grid-cols-2 md:grid-cols-5 md:divide-x divide-sand">
           {specs.map((s) => (
             <div key={s.label} className="bg-bone py-8 pr-4 md:px-8 md:first:pl-0">
               <p className="text-[10px] tracking-[0.28em] uppercase text-taupe mb-2">{s.label}</p>
-              <p className="font-display text-[26px] text-noir leading-none">{s.value}</p>
+              <p className="text-[22px] font-light text-noir leading-none">{s.value}</p>
             </div>
           ))}
         </div>
@@ -90,7 +90,7 @@ export default async function PropertyDetailPage({ params }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-16 lg:gap-28">
           <div>
             <p className="eyebrow text-bronze mb-8">The Residence</p>
-            <p className="font-display text-[clamp(26px,2.6vw,40px)] leading-[1.25] text-noir mb-10 max-w-[30ch]">
+            <p className="text-[clamp(21px,1.8vw,27px)] font-light leading-[1.5] text-noir mb-10 max-w-[38ch]">
               {lead}.
             </p>
             {rest.length > 0 && (
@@ -105,7 +105,7 @@ export default async function PropertyDetailPage({ params }: Props) {
                 {property.features.map((feat, i) => (
                   <li key={feat} className="flex items-baseline gap-5 py-5 border-b border-sand sm:odd:pr-8 sm:even:pl-8 sm:even:border-l">
                     <span className="text-[11px] tracking-[0.2em] text-taupe tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-                    <span className="font-display text-[20px] text-noir">{feat}</span>
+                    <span className="text-[16px] text-noir">{feat}</span>
                   </li>
                 ))}
               </ol>
@@ -128,7 +128,7 @@ export default async function PropertyDetailPage({ params }: Props) {
                   <Image src={property.agent.photo} alt={property.agent.name} fill sizes="100px" className="object-cover" />
                 </div>
                 <div>
-                  <p className="font-display text-[24px] leading-tight">{property.agent.name}</p>
+                  <p className="text-[18px] font-medium leading-tight">{property.agent.name}</p>
                   <p className="text-[12px] text-bone/50 mt-1">{property.agent.title}</p>
                 </div>
               </div>

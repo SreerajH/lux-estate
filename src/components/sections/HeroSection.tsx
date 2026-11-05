@@ -66,10 +66,10 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-noir/70 via-noir/10 to-noir/90" />
       <div className="absolute inset-0 bg-gradient-to-r from-noir/50 via-transparent to-transparent" />
 
-      <div className="relative z-10 h-full max-w-[1600px] mx-auto px-5 md:px-12 flex flex-col justify-end pb-[3vw]">
+      <div className="relative z-10 h-full max-w-[1600px] mx-auto px-5 md:px-12 flex flex-col justify-end pt-[110px] pb-[3vw]">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-6 md:mb-10">
           {/* statement */}
-          <div className="max-w-xl">
+          <div className="max-w-3xl">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -79,7 +79,7 @@ export default function HeroSection() {
               <span className="h-px w-10 bg-bronze-soft/70" />
               Est. {BRAND.established} · Worldwide
             </motion.p>
-            <h1 className="font-display text-[clamp(40px,5.4vw,82px)] leading-[1.02] tracking-[-0.02em]">
+            <h1 className="font-display text-[clamp(38px,min(5vw,8.5svh),78px)] leading-[1.04] tracking-[-0.02em]">
               {['Homes of', 'quiet consequence.'].map((line, i) => (
                 <span key={line} className="block overflow-hidden pb-[0.08em]">
                   <motion.span
@@ -136,7 +136,7 @@ export default function HeroSection() {
                 transition={{ duration: 0.7, ease }}
               >
                 <Link href={`/properties/${slide.slug}`} className="group block">
-                  <p className="font-display text-[28px] leading-tight group-hover:text-bronze-soft transition-colors duration-500">
+                  <p className="text-[20px] font-medium leading-tight group-hover:text-bronze-soft transition-colors duration-500">
                     {slide.title}
                   </p>
                   <p className="mt-1 text-[13px] tracking-[0.08em] text-bone/60">
@@ -174,7 +174,7 @@ export default function HeroSection() {
         <div
           aria-hidden
           className="flex justify-between font-display uppercase leading-[0.74] select-none -mx-[0.5vw]"
-          style={{ fontSize: 'clamp(64px, 19.5vw, 340px)', fontVariationSettings: '"opsz" 96' }}
+          style={{ fontSize: 'clamp(64px, min(19.5vw, 36svh), 340px)', fontVariationSettings: '"opsz" 96' }}
         >
           {letters.map((ch, i) => (
             <span key={i} className="block overflow-hidden pt-[0.04em]">

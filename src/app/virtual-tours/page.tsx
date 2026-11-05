@@ -60,8 +60,8 @@ export default function VirtualToursPage() {
               key={f}
               onClick={() => setFilter(f)}
               className={cn(
-                'relative font-display text-[24px] md:text-[28px] transition-colors duration-500',
-                filter === f ? 'text-bone italic' : 'text-bone/35 hover:text-bone/70'
+                'relative text-[12px] tracking-[0.26em] uppercase font-medium pb-2 transition-colors duration-500',
+                filter === f ? 'text-bone' : 'text-bone/40 hover:text-bone/75'
               )}
             >
               {f}
